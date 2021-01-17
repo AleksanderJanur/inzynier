@@ -1,17 +1,19 @@
 require('./models/User');
-require('./models/Track');
+require('./models/Form');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
-const trackRoutes = require('./routes/trackRoutes');
+const formRoutes = require('./routes/formRoutes');
+const accountRoutes = require('./routes/accountRoutes');
 const requireAuth = require('./middlewares/requireAuth');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(authRoutes);
-app.use(trackRoutes);
+app.use(formRoutes);
+app.use(accountRoutes);
 
 const mongoUri = 'mongodb+srv://Glucek10:agh1234@cluster0.awex6.mongodb.net/test?retryWrites=true&w=majority';
 if (!mongoUri) {

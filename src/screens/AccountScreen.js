@@ -1,20 +1,31 @@
-import React, { useContext } from 'react';
+import React, {useContext, useEffect} from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { Button } from 'react-native-elements';
-import { SafeAreaView } from 'react-navigation';
+import { Button } from 'react-native-paper';
+import {NavigationEvents} from 'react-navigation';
 import Spacer from '../components/Spacer';
 import { Context as AuthContext } from '../context/AuthContext';
+import AccountDetails from '../components/AccountDeatails';
+import {Appbar} from 'react-native-paper';
+import {navigate} from '../navigationRef';
 
 const AccountScreen = () => {
-  const { signout } = useContext(AuthContext);
-
+  const {state, fetchUser,signout } = useContext(AuthContext);
+    useEffect(() => {
+        fetchUser();
+    }, []);
   return (
-    <SafeAreaView forceInset={{ top: 'always' }}>
-      <Text style={{ fontSize: 48 }}>AccountScreen</Text>
+      <View>
+      <Appbar.Header>
+          <Appbar.BackAction onPress={()=>navigate('TrackList')} />
+          <Appbar.Content title="MyApp" subtitle="Twoje konto"/>
+          {/*<Appbar.Action icon="magnify" />*/}
+          {/*<Appbar.Action icon="dots-vertical"  />*/}
+      </Appbar.Header>
+        <AccountDetails/>
       <Spacer>
-        <Button title="Sign Out" onPress={signout} />
+        <Button mode="contained" onPress={signout}>Wyloguj się</Button>
       </Spacer>
-    </SafeAreaView>
+      </View>
   );
 };
 

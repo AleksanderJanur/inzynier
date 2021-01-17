@@ -1,14 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-/*do usera trzeba dodac:
-{
-  Role:Student/Nauczyciel,
-      kontakt:null poczatkowo,
-    ImieiNazwisko:null poczatkowo,
-    O mnie: null poczatkowo
-   Avatar: nie wiadomo czy to chce dawac
-}*/
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -19,6 +11,26 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  aboutMe: {
+    type: String,
+    required: false
+  },
+  role:{
+    type:String,
+    required:true
+  },
+  contact:{
+    type: String,
+    required: false
+  },
+  myName:{
+    type:String,
+    required:false
+  },
+  educationLevel:{
+    type:String,
+    required:false
   }
 });
 

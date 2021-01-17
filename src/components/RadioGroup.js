@@ -4,7 +4,6 @@ import { RadioButton, Text } from 'react-native-paper';
 
 const MyComponent = () => {
     const [value, setValue] = React.useState('first');
-
     return (
         <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
             <View style={{flexDirection:'row',justifyContent:'center',marginTop:20}}>

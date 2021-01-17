@@ -13,6 +13,7 @@ const SignupScreen = ({ navigation }) => {
   const { state, signup, clearErrorMessage } = useContext(AuthContext);
 
   return (
+
     <View style={styles.container}>
       <NavigationEvents onWillFocus={clearErrorMessage} />
       <AuthForm
@@ -43,11 +44,11 @@ SignupScreen.navigationOptions = () => {
 };
 //to do zmiany w przyszlosci do przemyslenia
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    marginBottom: 100,
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        marginBottom: 250,
+    },
 });
 
 export default SignupScreen;

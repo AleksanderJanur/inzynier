@@ -1,21 +1,33 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import { Text, Button } from 'react-native-elements';
 import Spacer from './Spacer';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
 import RadioGroup from '../components/RadioGroup'
+import {RadioButton} from 'react-native-paper';
+import {useToast} from 'react-native-styled-toast';
 
 const AuthForm = ({ headerText, errorMessage, onSubmit, submitButtonText }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const helpFunction = ()=>{
-      if(headerText==="Sign Up for Tracker"){
-          return <RadioGroup></RadioGroup>
+  const [role,setRole]= useState('')
+    const { toast } = useToast()
+  const canSing = ()=>{
+      if(!email.includes('@')){
+          toast({message:"Mail musi zawierać @"});
       }
-  }
+      else if(password.length<6){
+          toast({message:"Hasło musi mieć więcej niż 6 znaków"});
+      }
+      else if(headerText==="Sign Up for Tracker"&&role===''){
+          toast({message:"Wybierz swoją role"});
+      }
+      else{
+          onSubmit({ email, password,role })
+      }
 
+  }
   return (
     <>
       <Spacer>
@@ -50,12 +62,23 @@ const AuthForm = ({ headerText, errorMessage, onSubmit, submitButtonText }) => {
       {errorMessage ? (
         <Text style={styles.errorMessage}>{errorMessage}</Text>
       ) : null}
-      {/*wiem, ze moge zrobic ble ? to:null ale pytanie czy to stylizowac, bo fajnie wyglada czy uzyc tego ze zwyklego forma ???*/}
-          {helpFunction()}
+          {headerText==="Sign Up for Tracker" ?
+              <RadioButton.Group onValueChange={newValue => setRole(newValue)} value={role}>
+              <View style={{flexDirection:'row',justifyContent:'center',marginTop:20}}>
+                  <View>
+                      <Text>Uczeń</Text>
+                      <RadioButton value="uczen" />
+                  </View>
+                  <View style={{marginLeft:20}}>
+                      <Text>Nauczyciel</Text>
+                      <RadioButton value="Nauczyciel" />
+                  </View>
+              </View>
+          </RadioButton.Group>:null}
       <Spacer>
         <Button
           title={submitButtonText}
-          onPress={() => onSubmit({ email, password })}
+          onPress={canSing}
         />
       </Spacer>
     </>

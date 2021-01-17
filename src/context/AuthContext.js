@@ -8,35 +8,40 @@ const authReducer = (state, action) => {
     case 'add_error':
       return { ...state, errorMessage: action.payload };
     case 'signin':
-      return { errorMessage: '', token: action.payload };
+      return { errorMessage: '', token: action.payload,};
     case 'clear_error_message':
       return { ...state, errorMessage: '' };
     case 'signout':
       return { token: null, errorMessage: '' };
+    case 'getUser':
+      return {errorMessage: '', token: action.payload}
     default:
       return state;
   }
 };
 
-//robiło błędy, ale kolesiowi działało z poradnika
 
-// const tryLocalSignin = dispatch => async () => {
-//   const token = await AsyncStorage.getItem('token');
-//   if (token) {
-//     dispatch({ type: 'signin', payload: token });
-//     navigate('TrackList');
-//   } else {
-//     navigate('Signup');
-//   }
-// };
+const tryLocalSignin = dispatch => async () => {
+  const token = await AsyncStorage.getItem('token');
+  if (token) {
+    dispatch({ type: 'signin', payload: token });
+    navigate('TrackList');
+  } else {
+    navigate('Signup');
+  }
+};
 
 const clearErrorMessage = dispatch => () => {
   dispatch({ type: 'clear_error_message' });
 };
 
-const signup = dispatch => async ({ email, password }) => {
+const signup = dispatch => async ({ email, password, role }) => {
   try {
-    const response = await trackerApi.post('/signup', { email, password });
+    const aboutMe = null;
+    const contact = null;
+    const myName = null;
+    const educationLevel = null;
+    const response = await trackerApi.post('/signup', { email, password, role,aboutMe,contact, myName,educationLevel });
     await AsyncStorage.setItem('token', response.data.token);
     dispatch({ type: 'signin', payload: response.data.token });
 
@@ -49,13 +54,13 @@ const signup = dispatch => async ({ email, password }) => {
   }
 };
 
-const signin = dispatch => async ({ email, password }) => {
+const signin = dispatch => async ({ email, password, role }) => {
   try {
-    const response = await trackerApi.post('/signin', { email, password });
+    const response = await trackerApi.post('/signin', { email, password, role });
     await AsyncStorage.setItem('token', response.data.token);
     dispatch({ type: 'signin', payload: response.data.token });
     navigate('TrackList');
-    //mozna dac jakiegos
+    //mozna dac jakiegos toasta
   } catch (err) {
     dispatch({
       type: 'add_error',
@@ -69,9 +74,21 @@ const signout = dispatch => async () => {
   dispatch({ type: 'signout' });
   navigate('loginFlow');
 };
+const fetchUser = dispatch => async () => {
+  const response = await trackerApi.get('/getUser');
+  console.log(response.data + "twww");
+  dispatch({ type: 'getUser', payload: response.data });
+};
+const updateUser = dispatch => async (field,item) => {
+  const myJson = {
+  [field]:item
+  }
+  console.log(myJson,"dupa");
+  await trackerApi.post('/updateUser',myJson);
+}
 
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signin, signout, signup, clearErrorMessage },
+  { signin, signout, signup, clearErrorMessage, tryLocalSignin, fetchUser,updateUser },
   { token: null, errorMessage: '' }
 );
